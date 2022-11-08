@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { Post, Comment, User } = require('../models/');
+const withAuth = require('../utils/auth');
 
 // get all posts for homepage
 router.get('/', async (req, res) => {
@@ -16,9 +17,12 @@ router.get('/', async (req, res) => {
 });
 
 // get single post
-router.get('/post/:id', async (req, res) => {
+router.get('/post/:id', withAuth, async (req, res) => {
   try {
-    const postData = await Post.findByPk(req.params.id, {
+    const postData = await Post.findOne({
+      where: {
+        id: req.params.id
+      },
       include: [
         User,
         {
@@ -31,7 +35,8 @@ router.get('/post/:id', async (req, res) => {
     if (postData) {
       // serialize the data
       const post = postData.get({ plain: true });
-      res.render('single-post', { post });
+      console.log(post);
+      res.render('single-post', { post, loggedIn: req.session.loggedIn});
     } else {
       res.status(404).end();
     }
@@ -51,7 +56,7 @@ router.get('/login', (req, res) => {
 
 router.get('/signup', (req, res) => {
   if (req.session.loggedIn) {
-    res.redirect('/');
+    res.redirect('/dashboard');
     return;
   }
 
