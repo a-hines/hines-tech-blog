@@ -1,6 +1,7 @@
 # Tech Blog
 
-### Deployed App: 
+### Deployed App: https://hines-tech-blog.herokuapp.com/ 
+Deployment error - will update
 
 ### The acceptance criteria for this project were as follows:
 GIVEN a CMS-style blog site
